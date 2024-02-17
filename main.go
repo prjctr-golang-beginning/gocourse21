@@ -1,65 +1,26 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"solid/log"
-	"solid/notification"
-	"solid/sender"
-	"solid/sender/transport"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/google/uuid"
+	"gocourse21/internal/core/db"
+	"gocourse21/internal/domains/brand/model"
 )
 
-type A struct {
-	name string
-}
-
-func (p *A) Name() string {
-	return p.name
-}
-
-type B struct {
-	A
-}
-
-func (p *B) Description() string {
-	return p.Name() + `something else`
-}
-
-type C struct {
-	B
-}
-
-func (p *C) Description() string {
-	return p.B.Description() + `something else`
-}
-
 func main() {
-	s := sender.NewSender(
-		transport.NewKafkaCreator(),
-		transport.NewHttpCreator(),
-		transport.NewRabbitMQCreator(),
-	)
-	_ = s.Send(context.Background(), nil, nil)
+	b := model.NewBrand()
 
-	zc := log.ZapConfiger{}
-	c := zc.Build(
-		log.WithEnableCaller(true),
-		log.WithServiceVersion(`v1.0.0`),
-		log.WithSomethingElse(),
-	)
+	spew.Dump(b)
 
-	ms := &myStruct{}
-	notify(ms)
-}
+	db.PopulateWith(b, map[string]any{
+		`id`:         uuid.New(),
+		`is_main`:    `true`,
+		`name`:       `Test Brand`,
+		`code`:       `Test Brand`,
+		`alias`:      `test_brand`,
+		`order`:      27,
+		`created_at`: `2024-02-17 17:49:52`,
+	})
 
-func notify(n notification.NotificationTargets) error {
-	al := n.AllTargets()
-	return fmt.Errorf(`some %v`, al)
-}
-
-type myStruct struct {
-}
-
-func (m myStruct) AllTargets() []notification.Target {
-	return nil
+	spew.Dump(b)
 }
