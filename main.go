@@ -5,6 +5,9 @@ import (
 	"github.com/google/uuid"
 	"gocourse21/internal/core/db"
 	"gocourse21/internal/domains/brand/model"
+	model2 "gocourse21/internal/domains/product/model"
+	model3 "gocourse21/internal/domains/supplier/model"
+	"gocourse21/internal/lib/generator"
 )
 
 func main() {
@@ -23,4 +26,7 @@ func main() {
 	})
 
 	spew.Dump(b)
+
+	generator.GenerateServiceFiles(model.NewBrand(), model2.NewProduct(), model3.NewSupplier())
+	generator.GenerateRepositoryFiles(model.NewBrand(), model2.NewProduct(), model3.NewSupplier())
 }

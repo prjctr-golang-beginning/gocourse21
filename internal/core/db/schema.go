@@ -5,6 +5,8 @@ import (
 	"reflect"
 )
 
+type PrimaryKey []string
+
 type Schema interface {
 	TableName() string
 	Fields() []string
